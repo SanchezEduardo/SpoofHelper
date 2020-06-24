@@ -16,7 +16,7 @@ load_dotenv()
 
 class Wrapper():
   def __init__(self, region, summoner, champion, enemy_champion):
-    self.rate = 19
+    self.rate = 20
     self.per = 1
     self.totalT = 0
     
