@@ -1,0 +1,1 @@
+summoners_dict = {21: "Barrier", 1: "Cleanse", 14: "Ignite", 3: "Exhaust", 4: "Flash", 6: "Ghost", 7: "Heal", 13: "Clarity", 30: "To The King", 31: "Poro Toss", 11: "Smite", 33: "Mark", 12: "Teleport"}
