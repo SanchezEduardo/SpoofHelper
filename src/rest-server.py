@@ -7,10 +7,10 @@ app.config['JSON_SORT_KEYS'] = False
 api = Api(app)
 
 @app.route('/<region>/username=<username>&champion=<champion>&enemy_champion=<enemy_champion>')
-def hello(region, username, champion, enemy_champion):
-  test = Wrapper(region, username, champion, enemy_champion)
-  x = test.MatchBreakdown()
-  return x
+def RiotCall(region, username, champion, enemy_champion):
+  info = Wrapper(region, username, champion, enemy_champion)
+  response = info.MatchBreakdown()
+  return response
 
 if __name__ == '__main__':
   app.run(debug=True)
