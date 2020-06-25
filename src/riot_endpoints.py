@@ -15,7 +15,65 @@ requests_cache.install_cache('wrapper_cache', backend='sqlite', expire_after=864
 load_dotenv()
 
 class Wrapper():
+  """
+  Class containing wrapper functions to the Riot Api
+
+  Functions
+  ---------
+  CheckValidRegion()
+    Validates that the region input into the url is valid per Riot's API. Prevents rerouting of API key to another url
+  SummonerData()
+    Endpoint to SummonerV4 to retrieve summoner information and returns username, account_id, self.status, headers
+  MatchInfo()
+    Endpoint to MatchV4 to retrieve a list of gameId's filtered by where champion exists
+  MatchBreakDown()
+    Iterates through the MatchInfo id's to check where champion and enemy_champion exist and returns a dict for the rest api to later be used for SpoofBot
+  """
   def __init__(self, region, summoner, champion, enemy_champion):
+    """
+    Arguments
+    ---------
+    region : str
+      region where summoner exists
+    summoner : str
+      username/player desired to look up
+    champion : str
+      champion the player played
+    enemy_champion : str
+      champion the player played against
+    
+    Attributes
+    -----------
+    self.rate : int
+      unit messages for Riot's policy (20 requests per 1 second)
+    self.per : int
+      unit seconds for Riot's policy (20 requests per 1 second)
+    self.totalT : int
+      storing the total time that has passed since the request was made, this is checking 1 second
+    self.rate2 : int
+      unit messages for Riot's policy (100 requests per 100 seconds)
+    self.per2 : int
+      unit seconds for Riot's policy (100 requests per 100 second)
+    self.totalT2 : int
+       storing the total time that has passed since the request was made, this is checking for 120 seconds
+    self.wait : int
+      sleep timer to wait for next requests if condition met for rate limiter
+    
+    self.key : str
+      riot api key
+    self.regions : list
+      valid regions per Riot's api docs
+    self.hostname : string
+      formatted string, region +  api.riotgames.com
+    self.status : int
+      keeping track of the status returned from the request, used to check for any errors
+    self.status_codes : dict
+      contains keys of status code ints with values of string for the type of status
+    self.champion_id : int
+      getting champion id from the champion dict
+    self.enemy_champion_id : int
+      getting enemy champion id from the champion dict
+    """
     self.rate = 20
     self.per = 1
     self.totalT = 0
@@ -40,10 +98,24 @@ class Wrapper():
     self.enemy_champion_id = champions.get(self.enemy_champion)
   
   def CheckValidRegion(self):
+    """
+    Validates that the region input into the url is valid per Riot's API. Prevents rerouting of API key to another url
+
+    Returns
+      bool value, True is region exists in list, else False
+    """
     return self.region in self.regions
 
   def SummonerData(self):
+    """
+    endpoint to riot's api, SummonerV4
+
+    Returns
+      username, account_id, self.status, headers
+    """
     print('Initializing request to SummonerV4...')
+
+    # checcking if region is valid first, return status 400 if true
     print('Validating region...')
     if self.CheckValidRegion() == False:
       self.status = 400
@@ -51,6 +123,7 @@ class Wrapper():
       print(f'Status code: {self.status}, {self.status_codes.get(self.status)}...')
       return self.status
 
+    # if region is valid continue to attempt request to riot's endpoint
     else: 
       print('Valid region, attempting request to SummonerV4...')
 
@@ -114,6 +187,12 @@ class Wrapper():
         return username, account_id, self.status, headers
 
   def MatchInfo(self):
+    """
+    Endpoint to MatchV4 to retrieve a list of gameId's filtered by where champion exists
+
+    Returns
+      json response containing a 100 game match list filtered by where champion is in the game
+    """
     print('Initializing request to MatchV4...')
     print('Getting summoner information, calling SummonerV4...\nChecking response code before continuing with MatchV4...')
     start = time.time()
@@ -215,6 +294,12 @@ class Wrapper():
         return response.json()
 
   def MatchBreakdown(self):
+    """
+    Iterates through the MatchInfo id's to check where champion and enemy_champion exist and returns a dict for the rest api to later be used for SpoofBot
+
+    Returns
+      dict containing match details where champion and enemy_champion exist in the same game
+    """
     print('Creating object for MatchInfo()...')
     match_info = self.MatchInfo()
     match_dict = OrderedDict()
