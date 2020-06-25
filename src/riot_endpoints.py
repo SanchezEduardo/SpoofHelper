@@ -89,7 +89,7 @@ class Wrapper():
         self.totalT2 = 0
         time.sleep(self.wait)
       
-      if(headers[2] >= self.rate2 and self.totalT2 < self.per2):
+      if(headers[2] > self.rate2 and self.totalT2 < self.per2):
         self.wait = self.per2 - self.totalT2
         print(f'condition 3 met: Reached request limit... setting throttle. Waiting {self.wait} seconds to continue... here 1\n')
         self.totalT2 = 0
@@ -148,7 +148,7 @@ class Wrapper():
       self.totalT2 = 0
       time.sleep(self.wait)
     
-    if(headers[2] >= self.rate2 and self.totalT2 < self.per2):
+    if(headers[2] > self.rate2 and self.totalT2 < self.per2):
       self.wait = self.per2 - self.totalT2
       print(f'condition 3 met: Reached request limit... setting throttle. Waiting {self.wait} seconds to continue... here 2\n')
       self.totalT2 = 0
@@ -198,7 +198,7 @@ class Wrapper():
         self.totalT2 = 0
         time.sleep(self.wait)
       
-      if(headers[2] >= self.rate2 and self.totalT2 < self.per2):
+      if(headers[2] > self.rate2 and self.totalT2 < self.per2):
         self.wait = self.per2 - self.totalT2
         print(f'condition 3 met: Reached request limit... setting throttle. Waiting {self.wait} seconds to continue... here 3\n')
         self.totalT2 = 0
@@ -228,7 +228,9 @@ class Wrapper():
       match_id_list = []
 
       for match_id in match_info['matches']:
-        match_id_list.append(match_id['gameId']) 
+        match_id_list.append(match_id['gameId'])
+
+      match_id_list = match_id_list[:50]
       
       for match_id in match_id_list:
         url = f'https://{self.hostname}/lol/match/v4/matches/{match_id}?api_key={self.key}'
@@ -266,7 +268,7 @@ class Wrapper():
           self.totalT2 = 0
           time.sleep(self.wait)
         
-        if(headers[2] >= self.rate2 and self.totalT2 < self.per2):
+        if(headers[2] > self.rate2 and self.totalT2 < self.per2):
           self.wait = self.per2 - self.totalT2
           print(f'condition 3 met: Reached request limit... setting throttle. Waiting {self.wait} seconds to continue... here 4\n')
           self.totalT2 = 0
