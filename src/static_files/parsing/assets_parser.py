@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import json
 
 # parsing through item data json file to create dictionary of n -> itemName
