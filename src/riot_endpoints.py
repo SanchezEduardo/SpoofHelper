@@ -363,6 +363,7 @@ class Wrapper():
 
         game_id = response.json()['gameId']
         date = response.json()['gameCreation']/1000
+        gameVersion = response.json()['gameVersion']
 
         if response.status_code != 200:
           self.status = response.status_code
@@ -386,62 +387,67 @@ class Wrapper():
             user1 = participants_identities[participants[self.champion_id]['participantId']]
             user2 = participants_identities[participants[self.enemy_champion_id]['participantId']]
 
+            champ_d = participants[self.champion_id]['stats']
+            enemy_champ_d = participants[self.enemy_champion_id]['stats']
+
             match = {
               game_id: {
+                'gameId': game_id,
                 'date': date,
+                'gameVersion': gameVersion,
                 champions_inv.get(self.champion_id): {
                   'username': user1,
                   'teamId': participants[self.champion_id]['teamId'],
-                  'win': participants[self.champion_id]['stats']['win'],
-                  'kills': participants[self.champion_id]['stats']['kills'],
-                  'deaths': participants[self.champion_id]['stats']['deaths'],
-                  'assists': participants[self.champion_id]['stats']['assists'],
+                  'win': champ_d['win'],
+                  'kills': champ_d['kills'],
+                  'deaths': champ_d['deaths'],
+                  'assists': champ_d['assists'],
                   'championId': self.champion_id,
                   'spell1': summoners_dict.get(participants[self.champion_id]['spell1Id']),
                   'spell2': summoners_dict.get(participants[self.champion_id]['spell2Id']),
-                  'item0': items_dict.get(str(participants[self.champion_id]['stats']['item0'])),
-                  'item1': items_dict.get(str(participants[self.champion_id]['stats']['item1'])),
-                  'item2': items_dict.get(str(participants[self.champion_id]['stats']['item2'])),
-                  'item3': items_dict.get(str(participants[self.champion_id]['stats']['item3'])),
-                  'item4': items_dict.get(str(participants[self.champion_id]['stats']['item4'])),
-                  'item5': items_dict.get(str(participants[self.champion_id]['stats']['item5'])),
-                  'item6': items_dict.get(str(participants[self.champion_id]['stats']['item6'])),
-                  'perk0': runes_dict.get(str(participants[self.champion_id]['stats']['perk0'])),
-                  'perk1': runes_dict.get(str(participants[self.champion_id]['stats']['perk1'])),
-                  'perk2': runes_dict.get(str(participants[self.champion_id]['stats']['perk2'])),
-                  'perk3': runes_dict.get(str(participants[self.champion_id]['stats']['perk3'])),
-                  'perk4': runes_dict.get(str(participants[self.champion_id]['stats']['perk4'])),
-                  'perk5': runes_dict.get(str(participants[self.champion_id]['stats']['perk5'])),
-                  'statPerk0': perks_dict.get(participants[self.champion_id]['stats']['statPerk0']),
-                  'statPerk1': perks_dict.get(participants[self.champion_id]['stats']['statPerk1']),
-                  'statPerk2': perks_dict.get(participants[self.champion_id]['stats']['statPerk2'])
+                  'item0': items_dict.get(str(champ_d['item0'])),
+                  'item1': items_dict.get(str(champ_d['item1'])),
+                  'item2': items_dict.get(str(champ_d['item2'])),
+                  'item3': items_dict.get(str(champ_d['item3'])),
+                  'item4': items_dict.get(str(champ_d['item4'])),
+                  'item5': items_dict.get(str(champ_d['item5'])),
+                  'item6': items_dict.get(str(champ_d['item6'])),
+                  'perk0': runes_dict.get(str(champ_d['perk0'])),
+                  'perk1': runes_dict.get(str(champ_d['perk1'])),
+                  'perk2': runes_dict.get(str(champ_d['perk2'])),
+                  'perk3': runes_dict.get(str(champ_d['perk3'])),
+                  'perk4': runes_dict.get(str(champ_d['perk4'])),
+                  'perk5': runes_dict.get(str(champ_d['perk5'])),
+                  'statPerk0': perks_dict.get(champ_d['statPerk0']) if 'statPerk0' in champ_d else "",
+                  'statPerk1': perks_dict.get(champ_d['statPerk1']) if 'statPerk1' in champ_d else "",
+                  'statPerk2': perks_dict.get(champ_d['statPerk2']) if 'statPerk2' in champ_d else "",
                 },
                 champions_inv.get(self.enemy_champion_id): {
                   'username': user2,
                   'teamId': participants[self.enemy_champion_id]['teamId'],
-                  'win': participants[self.enemy_champion_id]['stats']['win'],
-                  'kills': participants[self.enemy_champion_id]['stats']['kills'],
-                  'deaths': participants[self.enemy_champion_id]['stats']['deaths'],
-                  'assists': participants[self.enemy_champion_id]['stats']['assists'],
+                  'win': enemy_champ_d['win'],
+                  'kills': enemy_champ_d['kills'],
+                  'deaths': enemy_champ_d['deaths'],
+                  'assists': enemy_champ_d['assists'],
                   'championId': self.enemy_champion_id,
                   'spell1': summoners_dict.get(participants[self.enemy_champion_id]['spell1Id']),
                   'spell2': summoners_dict.get(participants[self.enemy_champion_id]['spell2Id']),
-                  'item0': items_dict.get(str(participants[self.enemy_champion_id]['stats']['item0'])),
-                  'item1': items_dict.get(str(participants[self.enemy_champion_id]['stats']['item1'])),
-                  'item2': items_dict.get(str(participants[self.enemy_champion_id]['stats']['item2'])),
-                  'item3': items_dict.get(str(participants[self.enemy_champion_id]['stats']['item3'])),
-                  'item4': items_dict.get(str(participants[self.enemy_champion_id]['stats']['item4'])),
-                  'item5': items_dict.get(str(participants[self.enemy_champion_id]['stats']['item5'])),
-                  'item6': items_dict.get(str(participants[self.enemy_champion_id]['stats']['item6'])),
-                  'perk0': runes_dict.get(str(participants[self.enemy_champion_id]['stats']['perk0'])),
-                  'perk1': runes_dict.get(str(participants[self.enemy_champion_id]['stats']['perk1'])),
-                  'perk2': runes_dict.get(str(participants[self.enemy_champion_id]['stats']['perk2'])),
-                  'perk3': runes_dict.get(str(participants[self.enemy_champion_id]['stats']['perk3'])),
-                  'perk4': runes_dict.get(str(participants[self.enemy_champion_id]['stats']['perk4'])),
-                  'perk5': runes_dict.get(str(participants[self.enemy_champion_id]['stats']['perk5'])),
-                  'statPerk0': perks_dict.get(participants[self.enemy_champion_id]['stats']['statPerk0']),
-                  'statPerk1': perks_dict.get(participants[self.enemy_champion_id]['stats']['statPerk1']),
-                  'statPerk2': perks_dict.get(participants[self.enemy_champion_id]['stats']['statPerk2'])
+                  'item0': items_dict.get(str(enemy_champ_d['item0'])),
+                  'item1': items_dict.get(str(enemy_champ_d['item1'])),
+                  'item2': items_dict.get(str(enemy_champ_d['item2'])),
+                  'item3': items_dict.get(str(enemy_champ_d['item3'])),
+                  'item4': items_dict.get(str(enemy_champ_d['item4'])),
+                  'item5': items_dict.get(str(enemy_champ_d['item5'])),
+                  'item6': items_dict.get(str(enemy_champ_d['item6'])),
+                  'perk0': runes_dict.get(str(enemy_champ_d['perk0'])),
+                  'perk1': runes_dict.get(str(enemy_champ_d['perk1'])),
+                  'perk2': runes_dict.get(str(enemy_champ_d['perk2'])),
+                  'perk3': runes_dict.get(str(enemy_champ_d['perk3'])),
+                  'perk4': runes_dict.get(str(enemy_champ_d['perk4'])),
+                  'perk5': runes_dict.get(str(enemy_champ_d['perk5'])),
+                  'statPerk0': perks_dict.get(enemy_champ_d['statPerk0']) if 'statPerk0' in enemy_champ_d else "",
+                  'statPerk1': perks_dict.get(enemy_champ_d['statPerk1']) if 'statPerk1' in enemy_champ_d else "",
+                  'statPerk2': perks_dict.get(enemy_champ_d['statPerk2']) if 'statPerk2' in enemy_champ_d else "",
                 }
               }
             }
